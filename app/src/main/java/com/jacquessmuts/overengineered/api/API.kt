@@ -41,6 +41,15 @@ class API(okHttpClient: OkHttpClient = buildOkHttpClient()) {
         }
     }
 
+    suspend fun drawCard(deckId: String): Deck? {
+        return try {
+            deckService.drawCards(deckId)
+        } catch (exception: HttpException) {
+            Timber.e(exception)
+            null
+        }
+    }
+
     companion object {
 
         fun buildOkHttpClient(additionalInterceptor: Interceptor? = null): OkHttpClient {

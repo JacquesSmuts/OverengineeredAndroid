@@ -1,6 +1,7 @@
 package com.jacquessmuts.overengineered.api
 
 import com.jacquessmuts.overengineered.api.API.Companion.buildOkHttpClient
+import com.jacquessmuts.overengineered.model.Card
 import com.jacquessmuts.overengineered.model.Deck
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -37,7 +38,37 @@ internal class APITest {
     fun getDeckSuccess() = runBlocking {
         api = API(buildOkHttpClient(goodInterceptor("api/deck.json")))
 
-        assertEquals(api!!.getDeck(), Deck(true, "3p40paa87x90", true, 52))
+        assertEquals(api!!.getDeck(), Deck(
+            true,
+            "3p40paa87x90",
+            listOf(),
+            true,
+            52
+        ))
+    }
+    @org.junit.jupiter.api.Test
+    fun drawCardFail() = runBlocking {
+        api = API(buildOkHttpClient(badInterceptor()))
+
+        assertEquals(api!!.drawCard(""), null)
+    }
+
+    @org.junit.jupiter.api.Test
+    fun drawCardSuccess() = runBlocking {
+        api = API(buildOkHttpClient(goodInterceptor("api/deck_with_cards.json")))
+
+        assertEquals(api!!.drawCard("3p40paa87x90"), Deck(
+            true,
+            "3p40paa87x90",
+            listOf(Card(
+                "https://deckofcardsapi.com/static/img/KH.png",
+                "KING",
+                "HEARTS",
+                "KH"
+            )),
+            null,
+            50
+        ))
     }
 
     companion object {

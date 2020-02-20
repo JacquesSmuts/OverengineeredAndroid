@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "cards": [
+    {
+      "image": "https://deckofcardsapi.com/static/img/KH.png",
+      "value": "KING",
+      "suit": "HEARTS",
+      "code": "KH"
+    }
+  ],
+  "deck_id":"3p40paa87x90",
+  "remaining": 50
+}
