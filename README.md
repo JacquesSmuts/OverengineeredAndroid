@@ -6,10 +6,10 @@ Uses http://deckofcardsapi.com/ as a simple api to connect to.
 ## Libraries and patterns
 
 - 100% Kotlin
-- Kotlin Gradle.kts
+- Kotlin instead of Groovy for Gradle
 - Kotlin Coroutines
-- Android Architecture MVVM
-- Retrofit + Moshi + OkHttp
-- Koin
+- Android Architecture MVVM with Kotlin Coroutines Support
+- Retrofit + Moshi + OkHttp with Kotlin Coroutines Support
+- Koin for Kotlin
 - Timber
 
