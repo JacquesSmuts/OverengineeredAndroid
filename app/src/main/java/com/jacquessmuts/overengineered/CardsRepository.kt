@@ -1,6 +1,7 @@
 package com.jacquessmuts.overengineered
 
 import android.util.Log
+import com.jacquessmuts.overengineered.api.API
 import com.jacquessmuts.overengineered.api.DeckOfCardsService
 import com.jacquessmuts.overengineered.model.Deck
 import com.squareup.moshi.Moshi
@@ -16,54 +17,11 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class CardsRepository(): CoroutineScope by MainScope() {
+class CardsRepository(private val api: API): CoroutineScope by MainScope() {
 
-    val okHttpClient: OkHttpClient by lazy {
-        val interceptor = HttpLoggingInterceptor()
-
-        if (BuildConfig.DEBUG) {
-            interceptor.level = HttpLoggingInterceptor.Level.BODY
-        } else {
-            interceptor.level = HttpLoggingInterceptor.Level.NONE
-        }
-
-        OkHttpClient.Builder()
-            .addInterceptor { chain: Interceptor.Chain ->
-                val request = chain.request().newBuilder()
-                    .addHeader("Content-Type", "application/json")
-                    .addHeader("User-Agent", System.getProperty("http.agent") ?: "Android")
-                    .build()
-
-                Timber.d("Headers ${request.headers()}")
-                chain.proceed(request)
-            }
-            .addInterceptor(interceptor)
-            .readTimeout(
-                30,
-                TimeUnit.SECONDS
-            )
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .build()
-    }
-
-    val moshi = Moshi.Builder()
-        .add(KotlinJsonAdapterFactory())
-        .build()
-
-    val retrofit =
-        Retrofit.Builder()
-            .baseUrl("https://deckofcardsapi.com/")
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .client(okHttpClient)
-            .build()
-
-
-    val deckService by lazy {
-        retrofit.create<DeckOfCardsService>(DeckOfCardsService::class.java)
-    }
 
     val deck = flow {
-        val deck = deckService.getNewDeck()
+        val deck = api.getDeck()
         deck?.let { emit(it) }
     }
 }

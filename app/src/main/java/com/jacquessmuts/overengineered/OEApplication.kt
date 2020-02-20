@@ -1,6 +1,7 @@
 package com.jacquessmuts.overengineered
 
 import android.app.Application
+import com.jacquessmuts.overengineered.api.API
 import com.jacquessmuts.overengineered.ui.main.MainViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -25,10 +26,10 @@ class OEApplication: Application() {
         //TODO: else Timber.plant(CrashReportingTree())
 
         startKoin {
-            // your modules
             androidContext(this@OEApplication)
             modules(module {
-                single { CardsRepository() }
+                single { API() }
+                single { CardsRepository(get()) }
                 viewModel { MainViewModel(get()) }
             })
         }
