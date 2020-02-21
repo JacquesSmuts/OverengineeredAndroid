@@ -4,8 +4,6 @@ import com.jacquessmuts.overengineered.BuildConfig
 import com.jacquessmuts.overengineered.model.Deck
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -15,21 +13,10 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class API(okHttpClient: OkHttpClient = buildOkHttpClient()) {
-
-    private val retrofit =
-        Retrofit.Builder()
-            .baseUrl("https://deckofcardsapi.com/")
-            .addConverterFactory(MoshiConverterFactory.create(Moshi
-                .Builder()
-                .add(KotlinJsonAdapterFactory())
-                .build()))
-            .client(okHttpClient)
-            .build()
-
+class DeckApi(okHttpClient: OkHttpClient = buildOkHttpClient()) {
 
     private val deckService by lazy {
-        retrofit.create<DeckOfCardsService>(DeckOfCardsService::class.java)
+        buildRetroFit(okHttpClient).create(DeckOfCardsService::class.java)
     }
 
     suspend fun getDeck(): Deck? {
@@ -51,6 +38,17 @@ class API(okHttpClient: OkHttpClient = buildOkHttpClient()) {
     }
 
     companion object {
+
+        fun buildRetroFit(okHttpClient: OkHttpClient): Retrofit {
+                return Retrofit.Builder()
+                    .baseUrl("https://deckofcardsapi.com/")
+                    .addConverterFactory(MoshiConverterFactory.create(Moshi
+                        .Builder()
+                        .add(KotlinJsonAdapterFactory())
+                        .build()))
+                    .client(okHttpClient)
+                    .build()
+        }
 
         fun buildOkHttpClient(additionalInterceptor: Interceptor? = null): OkHttpClient {
             val interceptor = HttpLoggingInterceptor().apply {

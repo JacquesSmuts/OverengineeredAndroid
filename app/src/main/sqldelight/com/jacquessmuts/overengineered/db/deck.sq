@@ -1,0 +1,40 @@
+CREATE TABLE deck (
+  id TEXT NOT NULL,
+  success INTEGER AS Boolean DEFAULT 0,
+  shuffled INTEGER As Boolean DEFAULT 0,
+  remaining INTEGER As Int
+);
+
+CREATE TABLE card (
+  id TEXT NOT NULL,
+  deck_id TEXT NOT NULL,
+  image TEXT,
+  value TEXT,
+  suit TEXT,
+  code TEXT
+);
+
+CREATE INDEX deck_id ON deck(id);
+
+-- Queries
+
+getTopDeck:
+SELECT *
+FROM deck
+LIMIT 1;
+
+clearDeck:
+DELETE
+FROM deck;
+
+clearCards:
+DELETE
+FROM card;
+
+insertDeck:
+INSERT INTO deck(id, success, shuffled, remaining)
+VALUES (?, ?, ?, ?);
+
+insertCard:
+INSERT INTO card(id, deck_id, image, value, suit, code)
+VALUES (?, ?, ?, ?, ?, ?);

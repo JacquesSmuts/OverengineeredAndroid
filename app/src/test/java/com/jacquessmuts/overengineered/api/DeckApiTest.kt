@@ -1,44 +1,37 @@
 package com.jacquessmuts.overengineered.api
 
-import com.jacquessmuts.overengineered.api.API.Companion.buildOkHttpClient
+import com.jacquessmuts.overengineered.api.DeckApi.Companion.buildOkHttpClient
 import com.jacquessmuts.overengineered.model.Card
 import com.jacquessmuts.overengineered.model.Deck
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.TestCoroutineContext
-import kotlinx.coroutines.test.TestCoroutineScope
-import kotlinx.coroutines.test.runBlockingTest
-import kotlinx.coroutines.test.withTestContext
 import okhttp3.mock.*
 import okhttp3.mock.ClasspathResources.resource
 import okhttp3.mock.HttpCode.HTTP_400_BAD_REQUEST
-import okhttp3.mock.HttpCode.HTTP_401_UNAUTHORIZED
-import okhttp3.mock.MediaTypes.MEDIATYPE_JSON
 
 @ExperimentalCoroutinesApi
-internal class APITest {
+internal class DeckApiTest {
 
-    var api: API? = null
-
+    var deckApi: DeckApi? = null
 
     @org.junit.jupiter.api.AfterEach
     fun tearDown() {
-        api = null
+        deckApi = null
     }
 
     @org.junit.jupiter.api.Test
-    fun getDeckFail() = runBlocking {
-        api = API(buildOkHttpClient(badInterceptor()))
+    fun `get deck failure handled`() = runBlocking {
+        deckApi = DeckApi(buildOkHttpClient(badInterceptor()))
 
-        assertEquals(api!!.getDeck(), null)
+        assertEquals(deckApi!!.getDeck(), null)
     }
 
     @org.junit.jupiter.api.Test
-    fun getDeckSuccess() = runBlocking {
-        api = API(buildOkHttpClient(goodInterceptor("api/deck.json")))
+    fun `deck successfully parsed`() = runBlocking {
+        deckApi = DeckApi(buildOkHttpClient(goodInterceptor("api/deck.json")))
 
-        assertEquals(api!!.getDeck(), Deck(
+        assertEquals(deckApi!!.getDeck(), Deck(
             true,
             "3p40paa87x90",
             listOf(),
@@ -46,18 +39,19 @@ internal class APITest {
             52
         ))
     }
-    @org.junit.jupiter.api.Test
-    fun drawCardFail() = runBlocking {
-        api = API(buildOkHttpClient(badInterceptor()))
 
-        assertEquals(api!!.drawCard(""), null)
+    @org.junit.jupiter.api.Test
+    fun `draw card failure handled`() = runBlocking {
+        deckApi = DeckApi(buildOkHttpClient(badInterceptor()))
+
+        assertEquals(deckApi!!.drawCard(""), null)
     }
 
     @org.junit.jupiter.api.Test
-    fun drawCardSuccess() = runBlocking {
-        api = API(buildOkHttpClient(goodInterceptor("api/deck_with_cards.json")))
+    fun `draw card successfully parsed`() = runBlocking {
+        deckApi = DeckApi(buildOkHttpClient(goodInterceptor("api/deck_with_cards.json")))
 
-        assertEquals(api!!.drawCard("3p40paa87x90"), Deck(
+        assertEquals(deckApi!!.drawCard("3p40paa87x90"), Deck(
             true,
             "3p40paa87x90",
             listOf(Card(

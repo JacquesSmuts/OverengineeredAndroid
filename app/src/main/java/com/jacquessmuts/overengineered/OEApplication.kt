@@ -1,7 +1,8 @@
 package com.jacquessmuts.overengineered
 
 import android.app.Application
-import com.jacquessmuts.overengineered.api.API
+import com.jacquessmuts.overengineered.api.DeckApi
+import com.jacquessmuts.overengineered.db.DeckDb
 import com.jacquessmuts.overengineered.ui.main.MainViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -28,9 +29,11 @@ class OEApplication: Application() {
         startKoin {
             androidContext(this@OEApplication)
             modules(module {
-                single { API() }
-                single { CardsRepository(get()) }
+                single { DeckApi() }
+                single { CardsRepository(get(), get()) }
+                single { DeckDb(this@OEApplication) }
                 viewModel { MainViewModel(get()) }
+
             })
         }
 

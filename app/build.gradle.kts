@@ -1,6 +1,7 @@
 
 plugins {
     id("com.android.application")
+    id("com.squareup.sqldelight")
     kotlin("android")
     kotlin("android.extensions")
 }
@@ -26,6 +27,10 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    packagingOptions {
+        exclude("META-INF/main.kotlin_module")
+        exclude("META-INF/kotlinx-coroutines-core.kotlin_module")
     }
 }
 
@@ -55,6 +60,10 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:3.14.4")
     implementation("com.squareup.okhttp3:logging-interceptor:3.12.0")
 
+    // DB
+    implementation("com.squareup.sqldelight:android-driver:${Version.sqldelight}")
+    implementation("com.squareup.sqldelight:coroutines-extensions:${Version.sqldelight}")
+
     // Jake
     implementation("com.jakewharton.timber:timber:4.7.1")
 
@@ -63,6 +72,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Version.coroutines}")
     testImplementation("org.koin:koin-test:${Version.koin}")
     testImplementation("com.github.gmazzo:okhttp-mock:1.3.2")
+    testImplementation("io.mockk:mockk:1.9.3")
 
     // InstrumentedTests
     androidTestImplementation("androidx.test.ext:junit:1.1.1")
@@ -73,4 +83,5 @@ dependencies {
 object Version {
     const val koin = "2.0.1"
     const val coroutines = "1.3.3"
+    const val sqldelight = "1.2.1"
 }

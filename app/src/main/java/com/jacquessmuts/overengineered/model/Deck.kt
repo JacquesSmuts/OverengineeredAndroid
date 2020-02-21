@@ -1,6 +1,7 @@
 package com.jacquessmuts.overengineered.model
 
 import com.squareup.moshi.Json
+import java.util.*
 
 data class Deck (
     val success: Boolean,
@@ -11,6 +12,7 @@ data class Deck (
 )
 
 data class Card (
+    val id: String = UUID.randomUUID().toString(),
     val image: String,
     val value: String,
     val suit: String,
