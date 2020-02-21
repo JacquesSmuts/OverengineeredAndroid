@@ -8,8 +8,9 @@ Uses http://deckofcardsapi.com/ as a simple api to connect to.
 - 100% Kotlin
 - Kotlin instead of Groovy for Gradle
 - Kotlin Coroutines
-- Android Architecture MVVM with Kotlin Coroutines Support
-- Retrofit + Moshi + OkHttp with Kotlin Coroutines Support
-- Koin for Kotlin
+- Android Architecture MVVM (using Coroutine Support)
+- Retrofit + Moshi + OkHttp
+- SqlDelight for Persistence
+- Koin
 - Timber
 
