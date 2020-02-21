@@ -14,3 +14,8 @@ Uses http://deckofcardsapi.com/ as a simple api to connect to.
 - Koin
 - Timber
 
+## Ways in which this Repo wil overengineer:
+
+- Abstract too early
+- Lasagna more than is strictly necessary
+- Use big/complex systems to implement one thing, just in case it needs to be implemented many times.
