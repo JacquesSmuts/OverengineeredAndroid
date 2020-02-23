@@ -13,10 +13,9 @@ import org.koin.dsl.module
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 
-
 @ExperimentalCoroutinesApi
 @FlowPreview
-class OEApplication: Application() {
+class OEApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -24,7 +23,7 @@ class OEApplication: Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(DebugTree())
         }
-        //TODO: else Timber.plant(CrashReportingTree())
+        // TODO: else Timber.plant(CrashReportingTree())
 
         startKoin {
             androidContext(this@OEApplication)
@@ -33,10 +32,7 @@ class OEApplication: Application() {
                 single { CardsRepository(get(), get()) }
                 single { DeckDb(this@OEApplication) }
                 viewModel { MainViewModel(get()) }
-
             })
         }
-
     }
-
 }

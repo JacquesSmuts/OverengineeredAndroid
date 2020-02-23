@@ -32,8 +32,6 @@ class MainViewModel(val cardsRepo: CardsRepository) : ViewModel() {
     fun buttonClicked() {
         cardsRepo.drawCard()
     }
-
-
 }
 
 data class MainState(val text: String)

@@ -5,9 +5,16 @@ import com.jacquessmuts.overengineered.model.Card
 import com.jacquessmuts.overengineered.model.Deck
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import okhttp3.mock.*
 import okhttp3.mock.ClasspathResources.resource
 import okhttp3.mock.HttpCode.HTTP_400_BAD_REQUEST
+import okhttp3.mock.MockInterceptor
+import okhttp3.mock.get
+import okhttp3.mock.matches
+import okhttp3.mock.or
+import okhttp3.mock.post
+import okhttp3.mock.put
+import okhttp3.mock.rule
+import okhttp3.mock.url
 import org.junit.jupiter.api.Assertions.assertEquals
 
 @ExperimentalCoroutinesApi
@@ -70,7 +77,7 @@ internal class DeckApiTest {
 
         fun goodInterceptor(responseFileName: String): MockInterceptor {
             return MockInterceptor().apply {
-                rule (get or post or put, url matches ".*".toRegex()) {
+                rule(get or post or put, url matches ".*".toRegex()) {
                     respond(resource(responseFileName))
                 }
             }
@@ -78,7 +85,7 @@ internal class DeckApiTest {
 
         fun badInterceptor(): MockInterceptor {
             return MockInterceptor().apply {
-                rule (get or post or put, url matches ".*".toRegex()) {
+                rule(get or post or put, url matches ".*".toRegex()) {
                     respond(HTTP_400_BAD_REQUEST)
                 }
             }

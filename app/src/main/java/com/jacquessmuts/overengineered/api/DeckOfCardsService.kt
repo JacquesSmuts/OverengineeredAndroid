@@ -5,7 +5,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-
 interface DeckOfCardsService {
 
     @GET("api/deck/new/shuffle/?deck_count=1")
@@ -16,6 +15,4 @@ interface DeckOfCardsService {
         @Path("deck_id") deckId: String,
         @Query("count") numberOfCards: Int = 1
     ): Deck?
-
-
 }
