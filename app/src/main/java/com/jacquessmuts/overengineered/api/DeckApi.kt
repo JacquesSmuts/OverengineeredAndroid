@@ -4,6 +4,11 @@ import com.jacquessmuts.overengineered.BuildConfig
 import com.jacquessmuts.overengineered.model.Deck
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import java.net.UnknownHostException
+import java.util.concurrent.TimeUnit
+import kotlin.reflect.KSuspendFunction0
+import kotlin.reflect.KSuspendFunction2
+import kotlin.reflect.full.callSuspend
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -11,11 +16,6 @@ import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
-import java.net.UnknownHostException
-import java.util.concurrent.TimeUnit
-import kotlin.reflect.KSuspendFunction0
-import kotlin.reflect.KSuspendFunction2
-import kotlin.reflect.full.callSuspend
 
 class DeckApi(okHttpClient: OkHttpClient = buildOkHttpClient()) {
 
@@ -25,11 +25,11 @@ class DeckApi(okHttpClient: OkHttpClient = buildOkHttpClient()) {
 
     suspend fun getDeck(): Deck? = doApiCall(deckService::getNewDeck)
 
-    suspend fun drawCard(deckId: String, numberOfCards: Int = 1): Deck?
-            = doApiCall(deckService::drawCards, deckId, numberOfCards)
+    suspend fun drawCard(deckId: String, numberOfCards: Int = 1): Deck? =
+            doApiCall(deckService::drawCards, deckId, numberOfCards)
 
     // TODO: turn into response class
-    private suspend fun <T>doApiCall(apiCall: KSuspendFunction0<T>): T? {
+    private suspend fun <T> doApiCall(apiCall: KSuspendFunction0<T>): T? {
         return try {
             apiCall.callSuspend()
         } catch (exception: HttpException) {
@@ -42,7 +42,7 @@ class DeckApi(okHttpClient: OkHttpClient = buildOkHttpClient()) {
     }
 
     // TODO: turn into response class
-    private suspend fun<Input1, Input2, Output> doApiCall(
+    private suspend fun <Input1, Input2, Output> doApiCall(
         apiCall: KSuspendFunction2<Input1, Input2, Output>,
         input1: Input1,
         input2: Input2? = null

@@ -7,8 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.jacquessmuts.overengineered.R
 import kotlinx.android.synthetic.main.main_fragment.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
 @ExperimentalCoroutinesApi
@@ -22,7 +26,8 @@ class MainFragment : Fragment(), CoroutineScope by MainScope() {
     val mainViewModel by viewModel<MainViewModel>()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         return inflater.inflate(R.layout.main_fragment, container, false)
@@ -43,5 +48,4 @@ class MainFragment : Fragment(), CoroutineScope by MainScope() {
             message.setText(state.text)
         }
     }
-
 }

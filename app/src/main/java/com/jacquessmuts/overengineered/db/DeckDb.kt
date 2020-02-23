@@ -16,10 +16,10 @@ import kotlinx.coroutines.flow.map
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class DeckDb (
+class DeckDb(
     context: Context,
     private val queries: DeckQueries = Database(AndroidSqliteDriver(Database.Schema, context, "deck.db")).deckQueries
-): CoroutineScope by DefaultCoroutineScope() {
+) : CoroutineScope by DefaultCoroutineScope() {
 
     /**
      * This returns the latest deck, and any changes. If there is no deck it hangs forever.
@@ -62,9 +62,7 @@ class DeckDb (
             )
         }
     }
-
 }
-
 
 private fun CardEntity.toCard(): Card {
     return Card(
@@ -85,5 +83,4 @@ fun DeckEntity.toDeck(): Deck {
         this.shuffled ?: false,
         this.remaining ?: 0
     )
-
 }

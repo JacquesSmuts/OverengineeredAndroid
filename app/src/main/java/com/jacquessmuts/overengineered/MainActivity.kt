@@ -1,7 +1,7 @@
 package com.jacquessmuts.overengineered
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.jacquessmuts.overengineered.ui.main.MainFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -19,5 +19,4 @@ class MainActivity : AppCompatActivity() {
                 .commitNow()
         }
     }
-
 }

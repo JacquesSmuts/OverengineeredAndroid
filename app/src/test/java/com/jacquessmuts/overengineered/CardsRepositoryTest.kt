@@ -5,20 +5,19 @@ import com.jacquessmuts.overengineered.api.DeckApi
 import com.jacquessmuts.overengineered.db.DeckDb
 import com.jacquessmuts.overengineered.model.Card
 import com.jacquessmuts.overengineered.model.Deck
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.mockk
+import java.util.UUID
+import kotlin.random.Random
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
-import java.util.*
-import kotlin.random.Random
+import org.junit.jupiter.api.Test
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -27,7 +26,6 @@ internal class CardsRepositoryTest {
     lateinit var repository: CardsRepository
 
     val firstDeck = generateDeck()
-
 
     @BeforeEach
     fun setup() {
@@ -56,7 +54,7 @@ internal class CardsRepositoryTest {
 object Generators {
 
     val randomString
-        get() = UUID.randomUUID().toString().substring(0,(0..20).random())
+        get() = UUID.randomUUID().toString().substring(0, (0..20).random())
 
     val randomBoolean
         get() = Random.nextBoolean()
@@ -76,7 +74,6 @@ object Generators {
             shuffled = randomBoolean,
             remaining = randomInt
         )
-
     }
 
     fun generateCard(): Card {
