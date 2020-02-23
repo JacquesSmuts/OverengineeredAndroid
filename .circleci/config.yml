@@ -16,8 +16,8 @@ jobs:
           name: Run Tests
           command: ./gradlew lint test
       - store_artifacts:
-          path: build/test-results
+          path: app/build/test-results
           destination: test-results
       - store_test_results:
-          path: build/test-results
+          path: app/build/test-results
       # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
