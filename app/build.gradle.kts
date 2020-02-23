@@ -27,10 +27,9 @@ android {
     testOptions {
         tasks.withType<Test>().all {
             reports {
-                html.setEnabled(false)
+                html.setEnabled(true)
                 junitXml.setEnabled(true)
                 junitXml.destination = file("$buildDir/../../build/test-results/app")
-
             }
             maxHeapSize = "1024m"
         }
