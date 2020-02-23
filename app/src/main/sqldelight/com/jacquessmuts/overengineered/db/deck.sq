@@ -1,11 +1,11 @@
-CREATE TABLE deck (
+CREATE TABLE deckEntity (
   id TEXT NOT NULL,
   success INTEGER AS Boolean DEFAULT 0,
   shuffled INTEGER As Boolean DEFAULT 0,
   remaining INTEGER As Int
 );
 
-CREATE TABLE card (
+CREATE TABLE cardEntity (
   id TEXT NOT NULL,
   deck_id TEXT NOT NULL,
   image TEXT,
@@ -14,27 +14,32 @@ CREATE TABLE card (
   code TEXT
 );
 
-CREATE INDEX deck_id ON deck(id);
+CREATE INDEX deck_id ON deckEntity(id);
 
 -- Queries
 
 getTopDeck:
 SELECT *
-FROM deck
+FROM deckEntity
 LIMIT 1;
 
 clearDeck:
 DELETE
-FROM deck;
+FROM deckEntity;
+
+getCards:
+SELECT *
+FROM cardEntity
+WHERE deck_id = ?;
 
 clearCards:
 DELETE
-FROM card;
+FROM cardEntity;
 
 insertDeck:
-INSERT INTO deck(id, success, shuffled, remaining)
+INSERT INTO deckEntity(id, success, shuffled, remaining)
 VALUES (?, ?, ?, ?);
 
 insertCard:
-INSERT INTO card(id, deck_id, image, value, suit, code)
+INSERT INTO cardEntity(id, deck_id, image, value, suit, code)
 VALUES (?, ?, ?, ?, ?, ?);

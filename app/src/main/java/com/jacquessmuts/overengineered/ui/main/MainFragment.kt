@@ -32,13 +32,15 @@ class MainFragment : Fragment(), CoroutineScope by MainScope() {
         super.onActivityCreated(savedInstanceState)
 
         subscribeToState()
+
+        button.setOnClickListener {
+            mainViewModel.buttonClicked()
+        }
     }
 
-    private fun subscribeToState() {
-        launch {
-            mainViewModel.state.collect { state ->
-                message.setText(state.text)
-            }
+    private fun subscribeToState() = launch {
+        mainViewModel.state.collect { state ->
+            message.setText(state.text)
         }
     }
 

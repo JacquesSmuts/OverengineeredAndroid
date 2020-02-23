@@ -18,16 +18,19 @@ class MainViewModel(val cardsRepo: CardsRepository) : ViewModel() {
     val state = _state.asFlow()
 
     init {
-
         listenToRepo()
     }
 
     private fun listenToRepo() {
         viewModelScope.launch {
             cardsRepo.deck.collect { deck ->
-                _state.send(MainState(deck.id))
+                _state.send(MainState(deck.toString()))
             }
         }
+    }
+
+    fun buttonClicked() {
+        cardsRepo.drawCard()
     }
 
 

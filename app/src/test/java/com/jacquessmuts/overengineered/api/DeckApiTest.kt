@@ -3,12 +3,12 @@ package com.jacquessmuts.overengineered.api
 import com.jacquessmuts.overengineered.api.DeckApi.Companion.buildOkHttpClient
 import com.jacquessmuts.overengineered.model.Card
 import com.jacquessmuts.overengineered.model.Deck
-import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import okhttp3.mock.*
 import okhttp3.mock.ClasspathResources.resource
 import okhttp3.mock.HttpCode.HTTP_400_BAD_REQUEST
+import org.junit.jupiter.api.Assertions.assertEquals
 
 @ExperimentalCoroutinesApi
 internal class DeckApiTest {
@@ -55,6 +55,7 @@ internal class DeckApiTest {
             true,
             "3p40paa87x90",
             listOf(Card(
+                "aa",
                 "https://deckofcardsapi.com/static/img/KH.png",
                 "KING",
                 "HEARTS",

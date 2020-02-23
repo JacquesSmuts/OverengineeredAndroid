@@ -11,7 +11,11 @@ import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
+import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
+import kotlin.reflect.KSuspendFunction0
+import kotlin.reflect.KSuspendFunction2
+import kotlin.reflect.full.callSuspend
 
 class DeckApi(okHttpClient: OkHttpClient = buildOkHttpClient()) {
 
@@ -19,19 +23,37 @@ class DeckApi(okHttpClient: OkHttpClient = buildOkHttpClient()) {
         buildRetroFit(okHttpClient).create(DeckOfCardsService::class.java)
     }
 
-    suspend fun getDeck(): Deck? {
+    suspend fun getDeck(): Deck? = doApiCall(deckService::getNewDeck)
+
+    suspend fun drawCard(deckId: String, numberOfCards: Int = 1): Deck?
+            = doApiCall(deckService::drawCards, deckId, numberOfCards)
+
+    // TODO: turn into response class
+    private suspend fun <T>doApiCall(apiCall: KSuspendFunction0<T>): T? {
         return try {
-            deckService.getNewDeck()
+            apiCall.callSuspend()
         } catch (exception: HttpException) {
+            Timber.e(exception)
+            null
+        } catch (exception: UnknownHostException) {
             Timber.e(exception)
             null
         }
     }
 
-    suspend fun drawCard(deckId: String): Deck? {
+    // TODO: turn into response class
+    private suspend fun<Input1, Input2, Output> doApiCall(
+        apiCall: KSuspendFunction2<Input1, Input2, Output>,
+        input1: Input1,
+        input2: Input2? = null
+    ): Output? {
+
         return try {
-            deckService.drawCards(deckId)
+            apiCall.callSuspend(input1, input2)
         } catch (exception: HttpException) {
+            Timber.e(exception)
+            null
+        } catch (exception: UnknownHostException) {
             Timber.e(exception)
             null
         }

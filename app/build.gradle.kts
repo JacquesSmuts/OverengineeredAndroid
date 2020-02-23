@@ -38,7 +38,8 @@ dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
     // Kotlin
-    implementation(kotlin("stdlib-jdk7", "1.3.61"))
+    implementation(kotlin("stdlib-jdk7", Version.kotlin))
+    implementation(kotlin("reflect", Version.kotlin))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.coroutines}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Version.coroutines}")
 
@@ -73,6 +74,7 @@ dependencies {
     testImplementation("org.koin:koin-test:${Version.koin}")
     testImplementation("com.github.gmazzo:okhttp-mock:1.3.2")
     testImplementation("io.mockk:mockk:1.9.3")
+    testImplementation("com.squareup.sqldelight:sqlite-driver:${Version.sqldelight}")
 
     // InstrumentedTests
     androidTestImplementation("androidx.test.ext:junit:1.1.1")
@@ -81,6 +83,7 @@ dependencies {
 }
 
 object Version {
+    const val kotlin = "1.3.61"
     const val koin = "2.0.1"
     const val coroutines = "1.3.3"
     const val sqldelight = "1.2.1"
