@@ -26,6 +26,7 @@ android {
 
     testOptions {
         tasks.withType<Test>().all {
+            useJUnitPlatform()
             reports {
                 html.setEnabled(false)
                 junitXml.setEnabled(true)
