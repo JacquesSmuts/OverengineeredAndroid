@@ -27,6 +27,7 @@ android {
     testOptions {
         tasks.withType<Test>().all {
             reports {
+                html.setEnabled(false)
                 junitXml.setEnabled(true)
             }
             maxHeapSize = "1024m"
