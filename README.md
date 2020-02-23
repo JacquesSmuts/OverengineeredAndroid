@@ -1,3 +1,6 @@
+
+[![CircleCI](https://circleci.com/gh/JacquesSmuts/OverengineeredAndroid.svg?style=svg)](https://circleci.com/gh/JacquesSmuts/OverengineeredAndroid)
+
 # OverengineeredAndroid
 An overengineered android app. Meant to showcase the nice things you can use for larger apps. 
 
