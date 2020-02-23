@@ -82,7 +82,7 @@ dependencies {
     implementation("com.jakewharton.timber:timber:4.7.1")
 
     // Unit Tests
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.5.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Version.coroutines}")
     testImplementation("org.koin:koin-test:${Version.koin}")
     testImplementation("com.github.gmazzo:okhttp-mock:1.3.2")
