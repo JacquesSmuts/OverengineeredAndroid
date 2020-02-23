@@ -24,6 +24,18 @@ android {
         }
     }
 
+    testOptions {
+        tasks.withType<Test>().all {
+            reports {
+                html.setEnabled(false)
+                junitXml.setEnabled(true)
+                junitXml.destination = file("$buildDir/../../build/test-results/app")
+
+            }
+            maxHeapSize = "1024m"
+        }
+
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
