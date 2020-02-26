@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.jacquessmuts.overengineered.R
 import com.jacquessmuts.overengineered.ui.BaseFragment
 import kotlinx.android.synthetic.main.main_fragment.*
@@ -30,17 +32,22 @@ class MainFragment : BaseFragment<MainState, MainViewModel>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         setListeners()
+    }
+
+    override fun onStateUpdated(nuState: MainState) {
+        message.setText(getString(R.string.cards_remaining, nuState.cardsRemaining))
+        Glide.with(this)
+            .load(nuState.imageAddress)
+            .placeholder(imageView.drawable)
+            .fallback(R.drawable.card_back)
+            .transition(withCrossFade())
+            .into(imageView)
     }
 
     private fun setListeners() {
         button.clicks()
             .onEach { viewModel.buttonClicked() }
             .launchIn(this)
-    }
-
-    override fun onStateUpdated(nuState: MainState) {
-        message.setText(nuState.text)
     }
 }

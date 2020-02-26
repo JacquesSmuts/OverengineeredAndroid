@@ -19,7 +19,9 @@ class MainViewModel(val cardsRepo: CardsRepository) : BaseViewModel<MainState>()
 
     private fun listenToRepo() {
         cardsRepo.deck.onEach { deck ->
-            updateState(MainState(deck.toString()))
+            updateState(MainState(text = deck.toString(),
+                cardsRemaining = deck.remaining,
+                imageAddress = deck.cards.firstOrNull()?.image))
         }.launchIn(viewModelScope)
     }
 
@@ -28,4 +30,8 @@ class MainViewModel(val cardsRepo: CardsRepository) : BaseViewModel<MainState>()
     }
 }
 
-data class MainState(val text: String) : BaseState()
+data class MainState(
+    val text: String,
+    val cardsRemaining: Int,
+    val imageAddress: String? = null
+) : BaseState()

@@ -77,6 +77,10 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:3.14.4")
     implementation("com.squareup.okhttp3:logging-interceptor:3.12.0")
 
+    // Image Loading
+    implementation("com.github.bumptech.glide:glide:4.11.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
+
     // DB
     implementation("com.squareup.sqldelight:android-driver:${Version.sqldelight}")
     implementation("com.squareup.sqldelight:coroutines-extensions:${Version.sqldelight}")
