@@ -53,8 +53,11 @@ dependencies {
     // Kotlin
     implementation(kotlin("stdlib-jdk7", Version.kotlin))
     implementation(kotlin("reflect", Version.kotlin))
+
+    // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.coroutines}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Version.coroutines}")
+    implementation("io.github.reactivecircus.flowbinding:flowbinding-android:0.9.0")
 
     // Android
     implementation("androidx.appcompat:appcompat:1.1.0")

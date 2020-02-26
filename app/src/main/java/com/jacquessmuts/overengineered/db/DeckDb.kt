@@ -9,13 +9,9 @@ import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToOneNotNull
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-@FlowPreview
-@ExperimentalCoroutinesApi
 class DeckDb(
     context: Context,
     private val queries: DeckQueries = Database(AndroidSqliteDriver(Database.Schema, context, "deck.db")).deckQueries

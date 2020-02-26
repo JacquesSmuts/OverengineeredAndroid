@@ -6,13 +6,9 @@ import com.jacquessmuts.overengineered.db.DeckDb
 import com.jacquessmuts.overengineered.model.Card
 import com.jacquessmuts.overengineered.model.Deck
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-@ExperimentalCoroutinesApi
-@FlowPreview
 class CardsRepository(
     private val deckApi: DeckApi,
     private val deckDb: DeckDb

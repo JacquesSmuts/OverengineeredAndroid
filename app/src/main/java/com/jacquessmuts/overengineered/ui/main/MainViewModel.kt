@@ -1,8 +1,9 @@
 package com.jacquessmuts.overengineered.ui.main
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jacquessmuts.overengineered.CardsRepository
+import com.jacquessmuts.overengineered.ui.BaseState
+import com.jacquessmuts.overengineered.ui.BaseViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BroadcastChannel
@@ -12,7 +13,7 @@ import kotlinx.coroutines.launch
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class MainViewModel(val cardsRepo: CardsRepository) : ViewModel() {
+class MainViewModel(val cardsRepo: CardsRepository) : BaseViewModel<MainState>() {
 
     private val _state = BroadcastChannel<MainState>(1)
     val state = _state.asFlow()
@@ -34,4 +35,4 @@ class MainViewModel(val cardsRepo: CardsRepository) : ViewModel() {
     }
 }
 
-data class MainState(val text: String)
+data class MainState(val text: String) : BaseState()
