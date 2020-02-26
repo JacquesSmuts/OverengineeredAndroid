@@ -18,6 +18,7 @@ Uses http://deckofcardsapi.com/ as a simple api to connect to.
 - SqlDelight for Persistence
 - Koin
 - Timber
+- Mockk
 
 ## Ways in which this Repo wil overengineer:
 
