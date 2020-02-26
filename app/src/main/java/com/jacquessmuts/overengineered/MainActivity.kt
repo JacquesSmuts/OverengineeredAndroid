@@ -7,7 +7,6 @@ import com.jacquessmuts.overengineered.ui.main.MainState
 import com.jacquessmuts.overengineered.ui.main.MainViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
 @FlowPreview
@@ -27,6 +26,5 @@ class MainActivity : BaseActivity<MainState, MainViewModel>() {
     override val viewModel by viewModel<MainViewModel>()
 
     override fun onStateUpdated(nuState: MainState) {
-
     }
 }

@@ -6,28 +6,21 @@ import com.jacquessmuts.overengineered.ui.BaseState
 import com.jacquessmuts.overengineered.ui.BaseViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @FlowPreview
 @ExperimentalCoroutinesApi
 class MainViewModel(val cardsRepo: CardsRepository) : BaseViewModel<MainState>() {
-
-    private val _state = BroadcastChannel<MainState>(1)
-    val state = _state.asFlow()
 
     init {
         listenToRepo()
     }
 
     private fun listenToRepo() {
-        viewModelScope.launch {
-            cardsRepo.deck.collect { deck ->
-                _state.send(MainState(deck.toString()))
-            }
-        }
+        cardsRepo.deck.onEach { deck ->
+            updateState(MainState(deck.toString()))
+        }.launchIn(viewModelScope)
     }
 
     fun buttonClicked() {

@@ -1,11 +1,13 @@
 package com.jacquessmuts.overengineered.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @FlowPreview
@@ -19,6 +21,14 @@ abstract class BaseViewModel<BS : BaseState> : ViewModel() {
     // TODO: replace with StateFlow when it comes out
     private val _state = BroadcastChannel<BS>(1)
     val state = _state.asFlow()
+
+    /**
+     * This is he heart of the viewmodel. Every time this state updates, the attached view will be
+     * notified of the new state and update accordingly
+     */
+    protected fun updateState(nuState: BS) = viewModelScope.launch {
+        _state.send(nuState)
+    }
 
     protected fun pressBack() {
         broadcastEvent(BaseEvent.PressBack())

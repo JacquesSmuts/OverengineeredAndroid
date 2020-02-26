@@ -14,8 +14,15 @@ import timber.log.Timber
 @ExperimentalCoroutinesApi
 @FlowPreview
 abstract class BaseFragment<BS : BaseState, VM : BaseViewModel<BS>> : Fragment(),
-    BaseFragmentInterface<BS, VM>,
     CoroutineScope by MainScope() {
+
+    abstract val viewModel: VM
+
+    /**
+     * This is the heart of the fragment. Every time the viewmodel updates its state, this is called
+     * and the fragment should adjust to the new state.
+     */
+    abstract fun onStateUpdated(nuState: BS)
 
     override fun onStart() {
         super.onStart()
@@ -30,8 +37,6 @@ abstract class BaseFragment<BS : BaseState, VM : BaseViewModel<BS>> : Fragment()
                 onStateUpdated(it)
             }
     }
-
-    abstract fun onStateUpdated(nuState: BS)
 
     private fun listenToBaseEvents() = launch {
 
@@ -49,14 +54,4 @@ abstract class BaseFragment<BS : BaseState, VM : BaseViewModel<BS>> : Fragment()
         super.onDestroy()
         coroutineContext.cancelChildren()
     }
-}
-
-/**
- * Implement this and override these to your liking. Easiest is to use a delegate, like
- * com.blueair.app.AddDeviceFragment
- */
-@ExperimentalCoroutinesApi
-@FlowPreview
-interface BaseFragmentInterface<BS : BaseState, VM : BaseViewModel<BS>> {
-    val viewModel: VM
 }

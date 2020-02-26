@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.jacquessmuts.overengineered">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+
+
+<!--    TODO: remove this. The library may be enhanced to minSdk15, or you have to implement the individual elements yourself-->
+    <uses-sdk
+        tools:overrideLibrary="reactivecircus.flowbinding.android, reactivecircus.flowbinding.common" />
 
     <application
         android:name=".OEApplication"
