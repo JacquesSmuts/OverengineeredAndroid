@@ -3,7 +3,7 @@ package com.jacquessmuts.overengineered.db
 import android.content.Context
 import com.jacquessmuts.overengineered.Database
 import com.jacquessmuts.overengineered.Generators.generateDeck
-import com.squareup.sqldelight.db.SqlDriver
+import com.jacquessmuts.overengineered.test
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
 import io.mockk.mockk
@@ -25,20 +25,31 @@ internal class DeckDbTest {
 
         val context = mockk<Context>()
 
-        val driver: SqlDriver = JdbcSqliteDriver(IN_MEMORY).apply {
-            Database.Schema.create(this)
-        }
-
-        val queries = Database(driver).deckQueries
+        val queries = Database(
+            JdbcSqliteDriver(IN_MEMORY).apply { Database.Schema.create(this) }
+        ).deckQueries
 
         deckDb = DeckDb(context, queries)
     }
 
     @Test
-    fun `get same deck after insert`() = runBlockingTest {
+    fun `get same deck after insert`() {
+
+        deckDb.insertNewDeck(randomDeck)
+        assertEquals(randomDeck, deckDb.topDeck)
+    }
+
+    @Test
+    fun `get same deck with flow after insert`() = runBlockingTest {
 
         deckDb.insertNewDeck(randomDeck)
 
-        assertEquals(randomDeck, deckDb.latestDeck)
+        deckDb.latestDeck.test {
+            assertEquals(randomDeck, expectItem())
+            cancel()
+            expectNoMoreEvents()
+        }
+
+        assert(true)
     }
 }

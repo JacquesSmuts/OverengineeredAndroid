@@ -35,7 +35,7 @@ internal class CardsRepositoryTest {
 
         coEvery { deckApi.getDeck() } returns firstDeck
         coEvery { deckDb.insertNewDeck(any()) } returns Unit
-        every { deckDb.topDeck } returns flow {
+        every { deckDb.latestDeck } returns flow {
             emit(firstDeck)
         }
 

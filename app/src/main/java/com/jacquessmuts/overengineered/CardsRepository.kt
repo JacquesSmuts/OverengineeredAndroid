@@ -20,7 +20,7 @@ class CardsRepository(
         updateDeck()
     }
 
-    val deck = deckDb.topDeck.map {
+    val deck = deckDb.latestDeck.map {
         latestDeck = it
         it
     }

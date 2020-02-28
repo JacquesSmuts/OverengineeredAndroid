@@ -32,13 +32,26 @@ SELECT *
 FROM cardEntity
 WHERE deck_id = ?;
 
-clearCards:
+clearCardsFromOtherDecks:
 DELETE
-FROM cardEntity;
+FROM cardEntity
+WHERE deck_id != ?;
 
-insertDeck:
-INSERT INTO deckEntity(id, success, shuffled, remaining)
-VALUES (?, ?, ?, ?);
+upsertDeck:
+WITH new(id, success, shuffled, remaining) AS (
+    SELECT * FROM deckEntity WHERE NULL -- gets type hints without returning rows
+    UNION ALL
+    VALUES(?, ?, ?, ?)
+)
+REPLACE INTO deckEntity(id, success, shuffled, remaining)
+SELECT
+    new.id,
+    new.success,
+    new.shuffled,
+    new.remaining
+FROM new
+LEFT JOIN deckEntity AS old
+    ON old.id = new.id;
 
 insertCard:
 INSERT INTO cardEntity(id, deck_id, image, value, suit, code)
