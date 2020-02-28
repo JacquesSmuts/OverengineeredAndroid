@@ -71,11 +71,11 @@ dependencies {
     implementation("org.koin:koin-android-viewmodel:${Version.koin}")
 
     // HTTP
-    implementation("com.squareup.retrofit2:retrofit:2.7.1")
-    implementation("com.squareup.retrofit2:converter-moshi:2.7.1")
+    implementation("com.squareup.retrofit2:retrofit:2.6.4") // Upgrading this version brewks below SDK21
+    implementation("com.squareup.retrofit2:converter-moshi:2.6.4")
     implementation("com.squareup.moshi:moshi-kotlin:1.9.2")
-    implementation("com.squareup.okhttp3:okhttp:3.14.4")
-    implementation("com.squareup.okhttp3:logging-interceptor:3.12.0")
+    implementation("com.squareup.okhttp3:okhttp:3.12.9") // Upgrading this version breaks below SDK21
+    implementation("com.squareup.okhttp3:logging-interceptor:3.12.9")
 
     // Image Loading
     implementation("com.github.bumptech.glide:glide:4.11.0")
