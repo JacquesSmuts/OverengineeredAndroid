@@ -39,9 +39,7 @@ class CardsRepository(
         launch {
             latestDeck?.let {
                 deckApi.drawCard(it.id)?.let {
-                    val oldCards = latestDeck?.cards ?: listOf()
-                    val nuCards: List<Card> = it.cards.plus(oldCards)
-                    deckDb.insertNewDeck(it.copy(cards = nuCards))
+                    deckDb.insertNewDeck(it.copy(cards = it.cards.reversed()))
                 }
             }
         }

@@ -10,7 +10,7 @@ android {
     compileSdkVersion(29)
     defaultConfig {
         applicationId = "com.jacquessmuts.overengineered"
-        minSdkVersion(15)
+        minSdkVersion(14)
         targetSdkVersion(29)
         versionCode = 1
         versionName = "1.0"
@@ -57,13 +57,14 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.coroutines}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Version.coroutines}")
-    implementation("io.github.reactivecircus.flowbinding:flowbinding-android:0.9.0")
+    implementation("io.github.reactivecircus.flowbinding:flowbinding-android:0.10.1")
 
     // Android
     implementation("androidx.appcompat:appcompat:1.1.0")
-    implementation("com.android.support.constraint:constraint-layout:1.1.3")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta4")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
+    implementation("com.google.android.material:material:1.1.0")
 
     // Koin
     implementation("org.koin:koin-core:${Version.koin}")
