@@ -3,16 +3,11 @@ package com.jacquessmuts.overengineered
 import com.jacquessmuts.overengineered.api.DeckApi
 import com.jacquessmuts.overengineered.coroutines.DefaultCoroutineScope
 import com.jacquessmuts.overengineered.db.DeckDb
-import com.jacquessmuts.overengineered.model.Card
 import com.jacquessmuts.overengineered.model.Deck
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-@ExperimentalCoroutinesApi
-@FlowPreview
 class CardsRepository(
     private val deckApi: DeckApi,
     private val deckDb: DeckDb
@@ -24,7 +19,7 @@ class CardsRepository(
         updateDeck()
     }
 
-    val deck = deckDb.topDeck.map {
+    val deck = deckDb.latestDeck.map {
         latestDeck = it
         it
     }
@@ -43,9 +38,7 @@ class CardsRepository(
         launch {
             latestDeck?.let {
                 deckApi.drawCard(it.id)?.let {
-                    val oldCards = latestDeck?.cards ?: listOf()
-                    val nuCards: List<Card> = it.cards.plus(oldCards)
-                    deckDb.insertNewDeck(it.copy(cards = nuCards))
+                    deckDb.insertNewDeck(it.copy(cards = it.cards.reversed()))
                 }
             }
         }

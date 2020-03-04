@@ -3,24 +3,21 @@ package com.jacquessmuts.overengineered.db
 import android.content.Context
 import com.jacquessmuts.overengineered.Database
 import com.jacquessmuts.overengineered.Generators.generateDeck
-import com.squareup.sqldelight.db.SqlDriver
+import com.jacquessmuts.overengineered.test
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
-@FlowPreview
 internal class DeckDbTest {
 
     val randomDeck = generateDeck()
+    val randomDeck2 = generateDeck()
 
     private lateinit var deckDb: DeckDb
 
@@ -29,20 +26,35 @@ internal class DeckDbTest {
 
         val context = mockk<Context>()
 
-        val driver: SqlDriver = JdbcSqliteDriver(IN_MEMORY).apply {
-            Database.Schema.create(this)
-        }
-
-        val queries = Database(driver).deckQueries
+        val queries = Database(
+            JdbcSqliteDriver(IN_MEMORY).apply { Database.Schema.create(this) }
+        ).deckQueries
 
         deckDb = DeckDb(context, queries)
     }
 
     @Test
-    fun `get same deck after insert`() = runBlockingTest {
+    fun `get same deck after insert`() {
 
         deckDb.insertNewDeck(randomDeck)
+        assertEquals(randomDeck, deckDb.topDeck)
 
-        assertEquals(randomDeck, deckDb.latestDeck)
+        deckDb.insertNewDeck(randomDeck2)
+        assertEquals(randomDeck2, deckDb.topDeck)
+    }
+
+    @Test
+    fun `get same deck with flow after insert`() = runBlocking {
+
+        deckDb.insertNewDeck(randomDeck)
+        deckDb.insertNewDeck(randomDeck2)
+
+        deckDb.latestDeck.test {
+            assertEquals(randomDeck2, expectItem())
+            cancel()
+            expectNoMoreEvents()
+        }
+
+        assert(true)
     }
 }

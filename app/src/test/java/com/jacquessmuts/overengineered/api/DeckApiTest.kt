@@ -3,7 +3,6 @@ package com.jacquessmuts.overengineered.api
 import com.jacquessmuts.overengineered.api.DeckApi.Companion.buildOkHttpClient
 import com.jacquessmuts.overengineered.model.Card
 import com.jacquessmuts.overengineered.model.Deck
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import okhttp3.mock.ClasspathResources.resource
 import okhttp3.mock.HttpCode.HTTP_400_BAD_REQUEST
@@ -17,7 +16,6 @@ import okhttp3.mock.rule
 import okhttp3.mock.url
 import org.junit.jupiter.api.Assertions.assertEquals
 
-@ExperimentalCoroutinesApi
 internal class DeckApiTest {
 
     var deckApi: DeckApi? = null
