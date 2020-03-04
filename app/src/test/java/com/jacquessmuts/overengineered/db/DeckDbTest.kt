@@ -8,6 +8,7 @@ import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -44,7 +45,7 @@ internal class DeckDbTest {
     }
 
     @Test
-    fun `get same deck with flow after insert`() = runBlockingTest {
+    fun `get same deck with flow after insert`() = runBlocking {
 
         deckDb.insertNewDeck(randomDeck)
         deckDb.insertNewDeck(randomDeck2)
