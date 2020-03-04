@@ -19,34 +19,32 @@ class DeckDb(
 ) : CoroutineScope by IoCoroutineScope() {
 
     /**
-     * This returns the latest deck, and any changes. If there is no deck it hangs forever.
+     * This returns the latest deck with cards, and any changes. If there is no deck it hangs until cancelled.
      */
     val latestDeck: Flow<Deck> =
         queries.getTopDeck()
             .asFlow()
             .mapToOneNotNull()
             .map {
-                it.toDeck()
-                    .copy(cards = queries.getCards(it.id)
-                    .executeAsList()
-                    .map { it.toCard() })
+                it.toDeck()!!.copy(cards = queries.getCards(it.id).executeAsList().map { it.toCard() })
             }
 
-    val topDeck: Deck
+    val topDeck: Deck?
         get() = queries.getTopDeck()
-            .executeAsOne()
+            .executeAsOneOrNull()
             .toDeck()
-            .run {
+            ?.run {
                 this.copy(cards = queries.getCards(this.id).executeAsList().map { it.toCard() })
             }
 
     fun insertNewDeck(deck: Deck) {
 
         queries.transaction {
-            queries.clearCardsFromOtherDecks(deck.id)
-            queries.upsertDeck(
-                success = deck.success,
+            queries.clearDeck()
+//            queries.clearCardsFromOtherDecks(deck.id)
+            queries.insertDeck(
                 id = deck.id,
+                success = deck.success,
                 shuffled = deck.shuffled,
                 remaining = deck.remaining
             )
@@ -74,7 +72,10 @@ private fun CardEntity.toCard(): Card {
     )
 }
 
-fun DeckEntity.toDeck(): Deck {
+fun DeckEntity?.toDeck(): Deck? {
+
+    if (this == null)
+        return null
 
     return Deck(
         this.success ?: false,

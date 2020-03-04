@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test
 internal class DeckDbTest {
 
     val randomDeck = generateDeck()
+    val randomDeck2 = generateDeck()
 
     private lateinit var deckDb: DeckDb
 
@@ -37,15 +38,20 @@ internal class DeckDbTest {
 
         deckDb.insertNewDeck(randomDeck)
         assertEquals(randomDeck, deckDb.topDeck)
+
+        deckDb.insertNewDeck(randomDeck2)
+        val topDeck = deckDb.topDeck
+        assertEquals(randomDeck2, deckDb.topDeck)
     }
 
     @Test
     fun `get same deck with flow after insert`() = runBlockingTest {
 
         deckDb.insertNewDeck(randomDeck)
+        deckDb.insertNewDeck(randomDeck2)
 
         deckDb.latestDeck.test {
-            assertEquals(randomDeck, expectItem())
+            assertEquals(randomDeck2, expectItem())
             cancel()
             expectNoMoreEvents()
         }

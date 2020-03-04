@@ -1,20 +1,29 @@
 CREATE TABLE deckEntity (
-  id TEXT NOT NULL,
+  id TEXT NOT NULL PRIMARY KEY,
   success INTEGER AS Boolean DEFAULT 0,
   shuffled INTEGER As Boolean DEFAULT 0,
   remaining INTEGER As Int
 );
 
+CREATE INDEX deck_id ON deckEntity(id);
+
 CREATE TABLE cardEntity (
-  id TEXT NOT NULL,
+  id TEXT NOT NULL PRIMARY KEY,
   deck_id TEXT NOT NULL,
   image TEXT,
   value TEXT,
   suit TEXT,
-  code TEXT
+  code TEXT,
+  CONSTRAINT fk_deck
+    FOREIGN KEY(deck_id)
+    REFERENCES deckEntity(id)
+    ON DELETE CASCADE
 );
 
-CREATE INDEX deck_id ON deckEntity(id);
+CREATE INDEX card_id ON cardEntity(id);
+
+-- Enforce the Foreign Key relationship
+PRAGMA foreign_keys = "ON";
 
 -- Queries
 
@@ -22,6 +31,10 @@ getTopDeck:
 SELECT *
 FROM deckEntity
 LIMIT 1;
+
+insertDeck:
+INSERT INTO deckEntity(id, success, shuffled, remaining)
+VALUES(?, ?, ?, ?);
 
 clearDeck:
 DELETE
@@ -31,27 +44,6 @@ getCards:
 SELECT *
 FROM cardEntity
 WHERE deck_id = ?;
-
-clearCardsFromOtherDecks:
-DELETE
-FROM cardEntity
-WHERE deck_id != ?;
-
-upsertDeck:
-WITH new(id, success, shuffled, remaining) AS (
-    SELECT * FROM deckEntity WHERE NULL -- gets type hints without returning rows
-    UNION ALL
-    VALUES(?, ?, ?, ?)
-)
-REPLACE INTO deckEntity(id, success, shuffled, remaining)
-SELECT
-    new.id,
-    new.success,
-    new.shuffled,
-    new.remaining
-FROM new
-LEFT JOIN deckEntity AS old
-    ON old.id = new.id;
 
 insertCard:
 INSERT INTO cardEntity(id, deck_id, image, value, suit, code)
