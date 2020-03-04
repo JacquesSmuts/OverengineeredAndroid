@@ -3,7 +3,6 @@ package com.jacquessmuts.overengineered
 import com.jacquessmuts.overengineered.api.DeckApi
 import com.jacquessmuts.overengineered.coroutines.DefaultCoroutineScope
 import com.jacquessmuts.overengineered.db.DeckDb
-import com.jacquessmuts.overengineered.model.Card
 import com.jacquessmuts.overengineered.model.Deck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.map

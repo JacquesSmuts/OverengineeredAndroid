@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.recyclerview.widget.GridLayoutManager
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.jacquessmuts.overengineered.R
 import com.jacquessmuts.overengineered.ui.BaseFragment
 import com.jacquessmuts.overengineered.ui.adapter.CardAdapter
@@ -81,7 +79,6 @@ class MainFragment : BaseFragment<MainState, MainViewModel>() {
 
             override fun onTransitionCompleted(p0: MotionLayout?, p1: Int) {
             }
-
         })
     }
 }

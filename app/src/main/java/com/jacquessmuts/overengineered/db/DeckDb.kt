@@ -2,7 +2,6 @@ package com.jacquessmuts.overengineered.db
 
 import android.content.Context
 import com.jacquessmuts.overengineered.Database
-import com.jacquessmuts.overengineered.coroutines.DefaultCoroutineScope
 import com.jacquessmuts.overengineered.coroutines.IoCoroutineScope
 import com.jacquessmuts.overengineered.model.Card
 import com.jacquessmuts.overengineered.model.Deck

@@ -40,7 +40,6 @@ internal class DeckDbTest {
         assertEquals(randomDeck, deckDb.topDeck)
 
         deckDb.insertNewDeck(randomDeck2)
-        val topDeck = deckDb.topDeck
         assertEquals(randomDeck2, deckDb.topDeck)
     }
 
