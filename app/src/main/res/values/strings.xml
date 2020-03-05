@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Overengineered</string>
+    <string name="draw_card">Draw a card</string>
+    <string name="cards_remaining">%d cards in deck</string>
 </resources>

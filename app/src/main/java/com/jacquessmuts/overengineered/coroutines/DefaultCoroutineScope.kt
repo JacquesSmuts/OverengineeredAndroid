@@ -17,3 +17,14 @@ open class DefaultCoroutineScope : CoroutineScope {
         coroutineContext.cancelChildren()
     }
 }
+
+open class IoCoroutineScope : CoroutineScope {
+    val job: Job by lazy { SupervisorJob() }
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.IO + job
+
+    fun clearJobs() {
+        coroutineContext.cancelChildren()
+    }
+}

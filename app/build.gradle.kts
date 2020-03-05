@@ -10,7 +10,7 @@ android {
     compileSdkVersion(29)
     defaultConfig {
         applicationId = "com.jacquessmuts.overengineered"
-        minSdkVersion(15)
+        minSdkVersion(14)
         targetSdkVersion(29)
         versionCode = 1
         versionName = "1.0"
@@ -53,14 +53,18 @@ dependencies {
     // Kotlin
     implementation(kotlin("stdlib-jdk7", Version.kotlin))
     implementation(kotlin("reflect", Version.kotlin))
+
+    // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.coroutines}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Version.coroutines}")
+    implementation("io.github.reactivecircus.flowbinding:flowbinding-android:0.10.1")
 
     // Android
     implementation("androidx.appcompat:appcompat:1.1.0")
-    implementation("com.android.support.constraint:constraint-layout:1.1.3")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta4")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
+    implementation("com.google.android.material:material:1.1.0")
 
     // Koin
     implementation("org.koin:koin-core:${Version.koin}")
@@ -68,11 +72,15 @@ dependencies {
     implementation("org.koin:koin-android-viewmodel:${Version.koin}")
 
     // HTTP
-    implementation("com.squareup.retrofit2:retrofit:2.7.1")
-    implementation("com.squareup.retrofit2:converter-moshi:2.7.1")
+    implementation("com.squareup.retrofit2:retrofit:2.6.4") // Upgrading this version brewks below SDK21
+    implementation("com.squareup.retrofit2:converter-moshi:2.6.4")
     implementation("com.squareup.moshi:moshi-kotlin:1.9.2")
-    implementation("com.squareup.okhttp3:okhttp:3.14.4")
-    implementation("com.squareup.okhttp3:logging-interceptor:3.12.0")
+    implementation("com.squareup.okhttp3:okhttp:3.12.9") // Upgrading this version breaks below SDK21
+    implementation("com.squareup.okhttp3:logging-interceptor:3.12.9")
+
+    // Image Loading
+    implementation("com.github.bumptech.glide:glide:4.11.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
 
     // DB
     implementation("com.squareup.sqldelight:android-driver:${Version.sqldelight}")

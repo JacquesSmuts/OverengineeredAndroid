@@ -9,13 +9,17 @@ Uses http://deckofcardsapi.com/ as a simple api to connect to.
 ## Libraries and patterns
 
 - 100% Kotlin
-- Kotlin instead of Groovy for Gradle
-- Kotlin Coroutines
-- Android Architecture MVVM (using Coroutine Support)
-- Retrofit + Moshi + OkHttp
-- SqlDelight for Persistence
-- Koin
-- Timber
+- [Kotlin DSL](https://docs.gradle.org/current/userguide/kotlin_dsl.html) instead of Groovy for Gradle
+- [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html)
+- [FlowBinding](https://github.com/ReactiveCircus/FlowBinding)
+- [Android Architecture MVVM](https://developer.android.com/topic/libraries/architecture/viewmodel) (using [Coroutine Support](https://developer.android.com/topic/libraries/architecture/coroutines))
+- [Retrofit](https://square.github.io/retrofit/) + [Moshi](https://square.github.io/okhttp/) + [OkHttp](https://square.github.io/okhttp/)
+- [Glide](https://github.com/bumptech/glide) for Images
+- [SqlDelight](https://github.com/cashapp/sqldelight) for Persistence
+- [Koin](https://github.com/InsertKoinIO/koin)
+- [Timber](https://github.com/JakeWharton/timber)
+- [Mockk](https://mockk.io/)
+- [JUnit5](https://junit.org/junit5/docs/current/user-guide/)
 
 ## Ways in which this Repo wil overengineer:
 
