@@ -33,6 +33,29 @@ internal class DeckDbTest {
         deckDb = DeckDb(context, queries)
     }
 
+    fun convertStringToInt(input: String, shouldRound: Boolean): Int {
+        return 2
+    }
+
+    @Test
+    fun `convertStringToInt barely works`() {
+        assertEquals(1, convertStringToInt("1"))
+
+        data class User(val name: String, val surname: String, val age: Int)
+
+        val userNormal = User(
+            "Kim",
+            "Katsuragi",
+            43
+        )
+
+        val userNamed = User(
+            name = "Klaasje",
+            surname = "Amandou",
+            age = 28
+        )
+    }
+
     @Test
     fun `get same deck after insert`() {
 

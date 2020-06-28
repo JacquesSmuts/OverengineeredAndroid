@@ -4,6 +4,7 @@ plugins {
     id("com.squareup.sqldelight")
     kotlin("android")
     kotlin("android.extensions")
+    kotlin("plugin.serialization") version "1.3.70"
 }
 
 android {
@@ -15,6 +16,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled = true
     }
 
     buildTypes {
@@ -43,6 +45,7 @@ android {
     packagingOptions {
         exclude("META-INF/main.kotlin_module")
         exclude("META-INF/kotlinx-coroutines-core.kotlin_module")
+        exclude("META-INF/kotlinx-serialization-runtime.kotlin_module")
     }
 
 }
@@ -57,14 +60,15 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.coroutines}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Version.coroutines}")
-    implementation("io.github.reactivecircus.flowbinding:flowbinding-android:0.10.1")
+    implementation("io.github.reactivecircus.flowbinding:flowbinding-android:0.11.1")
 
     // Android
     implementation("androidx.appcompat:appcompat:1.1.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta4")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta7")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
     implementation("com.google.android.material:material:1.1.0")
+    implementation("androidx.multidex:multidex:2.0.1")
 
     // Koin
     implementation("org.koin:koin-core:${Version.koin}")
@@ -72,11 +76,12 @@ dependencies {
     implementation("org.koin:koin-android-viewmodel:${Version.koin}")
 
     // HTTP
-    implementation("com.squareup.retrofit2:retrofit:2.6.4") // Upgrading this version brewks below SDK21
-    implementation("com.squareup.retrofit2:converter-moshi:2.6.4")
-    implementation("com.squareup.moshi:moshi-kotlin:1.9.2")
-    implementation("com.squareup.okhttp3:okhttp:3.12.9") // Upgrading this version breaks below SDK21
-    implementation("com.squareup.okhttp3:logging-interceptor:3.12.9")
+    implementation("io.ktor:ktor-client-cio:${Version.ktor}")
+    implementation("io.ktor:ktor-client-json-jvm:${Version.ktor}")
+    implementation("io.ktor:ktor-client-serialization-jvm:${Version.ktor}")
+    implementation("io.ktor:ktor-client-logging-jvm:${Version.ktor}")
+//    implementation("io.ktor:ktor-client-json:${Version.ktor}")
+//    implementation("io.ktor:ktor-client-serialization:${Version.ktor}")
 
     // Image Loading
     implementation("com.github.bumptech.glide:glide:4.11.0")
@@ -88,6 +93,9 @@ dependencies {
 
     // Jake
     implementation("com.jakewharton.timber:timber:4.7.1")
+
+    // Jacques
+//    implementation("com.jacquessmuts.namedargslinter:0.1.4")
 
     // Unit Tests
     testImplementation("org.junit.jupiter:junit-jupiter:5.5.2")
@@ -104,8 +112,9 @@ dependencies {
 }
 
 object Version {
-    const val kotlin = "1.3.61"
+    const val kotlin = "1.3.70"
     const val koin = "2.0.1"
+    const val ktor = "1.3.2"
     const val coroutines = "1.3.3"
     const val sqldelight = "1.2.1"
 }

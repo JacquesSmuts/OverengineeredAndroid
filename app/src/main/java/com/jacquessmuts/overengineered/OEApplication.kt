@@ -1,6 +1,6 @@
 package com.jacquessmuts.overengineered
 
-import android.app.Application
+import androidx.multidex.MultiDexApplication
 import com.jacquessmuts.overengineered.api.DeckApi
 import com.jacquessmuts.overengineered.db.DeckDb
 import com.jacquessmuts.overengineered.ui.main.MainViewModel
@@ -15,7 +15,7 @@ import timber.log.Timber.DebugTree
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class OEApplication : Application() {
+class OEApplication : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()

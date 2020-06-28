@@ -1,5 +1,6 @@
 package com.jacquessmuts.overengineered
 
+import com.jacquessmuts.overengineered.api.ApiResult
 import com.jacquessmuts.overengineered.api.DeckApi
 import com.jacquessmuts.overengineered.coroutines.DefaultCoroutineScope
 import com.jacquessmuts.overengineered.db.DeckDb
@@ -7,6 +8,7 @@ import com.jacquessmuts.overengineered.model.Deck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class CardsRepository(
     private val deckApi: DeckApi,
@@ -26,8 +28,13 @@ class CardsRepository(
 
     fun updateDeck() {
         launch {
-            deckApi.getDeck()?.let {
-                deckDb.insertNewDeck(it)
+            val result = deckApi.getDeck()
+
+            if (result is ApiResult.Success) {
+                Timber.i("Success. Inserting ${result.data}")
+                deckDb.insertNewDeck(result.data)
+            } else if (result is ApiResult.Error) {
+                Timber.e(result.exception)
             }
         }
     }
@@ -36,11 +43,15 @@ class CardsRepository(
         require(number in 1..52)
 
         launch {
-            latestDeck?.let {
-                deckApi.drawCard(it.id)?.let {
-                    deckDb.insertNewDeck(it.copy(cards = it.cards.reversed()))
+            latestDeck?.let { oldDeck ->
+                val result = deckApi.drawCard(oldDeck.id)
+
+                if (result is ApiResult.Success) {
+                    deckDb.insertNewDeck(oldDeck.copy(cards = result.data.cards.reversed()))
+                } else if (result is ApiResult.Error) {
+                    Timber.e(result.exception)
                 }
-            }
+            } ?: TODO("Handle a 'no deck' error")
         }
     }
 }
