@@ -1,13 +1,18 @@
 package com.jacquessmuts.overengineered
 
 import com.jacquessmuts.overengineered.api.DeckApi
+import com.jacquessmuts.overengineered.api.onFailure
+import com.jacquessmuts.overengineered.api.onSuccess
 import com.jacquessmuts.overengineered.coroutines.DefaultCoroutineScope
 import com.jacquessmuts.overengineered.db.DeckDb
 import com.jacquessmuts.overengineered.model.Deck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.serialization.UnstableDefault
+import timber.log.Timber
 
+@UnstableDefault
 class CardsRepository(
     private val deckApi: DeckApi,
     private val deckDb: DeckDb
@@ -26,8 +31,11 @@ class CardsRepository(
 
     fun updateDeck() {
         launch {
-            deckApi.getDeck()?.let {
+            deckApi.getDeck().onSuccess {
+                Timber.i("Success. Inserting $it")
                 deckDb.insertNewDeck(it)
+            }.onFailure {
+                Timber.e(it)
             }
         }
     }
@@ -36,11 +44,14 @@ class CardsRepository(
         require(number in 1..52)
 
         launch {
-            latestDeck?.let {
-                deckApi.drawCard(it.id)?.let {
-                    deckDb.insertNewDeck(it.copy(cards = it.cards.reversed()))
-                }
-            }
+            latestDeck?.let { oldDeck ->
+                deckApi.drawCard(oldDeck.id)
+                    .onSuccess {
+                        deckDb.insertNewDeck(oldDeck.copy(cards = it.cards.reversed()))
+                    }.onFailure {
+                        Timber.e(it)
+                    }
+            } ?: TODO("Handle a 'no deck' error")
         }
     }
 }
