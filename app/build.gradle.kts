@@ -80,6 +80,7 @@ dependencies {
     implementation("io.ktor:ktor-client-json-jvm:${Version.ktor}")
     implementation("io.ktor:ktor-client-serialization-jvm:${Version.ktor}")
     implementation("io.ktor:ktor-client-logging-jvm:${Version.ktor}")
+    testImplementation("io.ktor:ktor-client-mock-jvm:${Version.ktor}")
 //    implementation("io.ktor:ktor-client-json:${Version.ktor}")
 //    implementation("io.ktor:ktor-client-serialization:${Version.ktor}")
 
@@ -101,7 +102,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.5.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Version.coroutines}")
     testImplementation("org.koin:koin-test:${Version.koin}")
-    testImplementation("com.github.gmazzo:okhttp-mock:1.3.2")
     testImplementation("io.mockk:mockk:1.9.3")
     testImplementation("com.squareup.sqldelight:sqlite-driver:${Version.sqldelight}")
 

@@ -4,11 +4,16 @@ import com.jacquessmuts.overengineered.model.Deck
 import io.ktor.client.HttpClient
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.features.logging.LogLevel
+import io.ktor.client.features.logging.Logger
+import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.get
 import io.ktor.client.utils.buildHeaders
 import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
+import timber.log.Timber
 
+@UnstableDefault
 class DeckApi(private val client: HttpClient = buildHttpClient()) {
 
     suspend fun getDeck(): ApiResult<Deck> {
@@ -21,9 +26,9 @@ class DeckApi(private val client: HttpClient = buildHttpClient()) {
 
     private suspend inline fun <reified T : Any> doApiCall(url: String): ApiResult<T> {
         return try {
-            ApiResult.Success(client.get(url))
+            Success(client.get(url))
         } catch (exception: Exception) {
-            ApiResult.Error(exception)
+            Failure(exception)
         }
     }
 
@@ -40,11 +45,23 @@ class DeckApi(private val client: HttpClient = buildHttpClient()) {
                 append("User-Agent", System.getProperty("http.agent") ?: "Android")
             }
             install(JsonFeature) {
-                serializer = KotlinxSerializer(Json {
-                    isLenient = true
-                    ignoreUnknownKeys = true
-                })
+                serializer = defaultSerializer
+            }
+            install(Logging) {
+                logger = TimberHttpLogger()
+                level = LogLevel.BODY
             }
         }
+
+        val defaultSerializer: KotlinxSerializer = KotlinxSerializer(Json {
+            isLenient = true
+            ignoreUnknownKeys = true
+        })
+    }
+}
+
+class TimberHttpLogger(): Logger {
+    override fun log(message: String) {
+        Timber.d(message)
     }
 }

@@ -2,6 +2,7 @@ package com.jacquessmuts.overengineered
 
 import com.jacquessmuts.overengineered.Generators.generateDeck
 import com.jacquessmuts.overengineered.api.DeckApi
+import com.jacquessmuts.overengineered.api.Success
 import com.jacquessmuts.overengineered.db.DeckDb
 import com.jacquessmuts.overengineered.model.Card
 import com.jacquessmuts.overengineered.model.Deck
@@ -15,6 +16,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.serialization.UnstableDefault
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -27,13 +29,14 @@ internal class CardsRepositoryTest {
 
     val firstDeck = generateDeck()
 
+    @UnstableDefault
     @BeforeEach
     fun setup() {
 
         val deckApi = mockk<DeckApi>()
         val deckDb = mockk<DeckDb>()
 
-        coEvery { deckApi.getDeck() } returns firstDeck
+        coEvery { deckApi.getDeck() } returns Success(firstDeck)
         coEvery { deckDb.insertNewDeck(any()) } returns Unit
         every { deckDb.latestDeck } returns flow {
             emit(firstDeck)

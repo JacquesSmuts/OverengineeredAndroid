@@ -2,14 +2,19 @@ package com.jacquessmuts.overengineered
 
 import com.jacquessmuts.overengineered.api.ApiResult
 import com.jacquessmuts.overengineered.api.DeckApi
+import com.jacquessmuts.overengineered.api.Success
+import com.jacquessmuts.overengineered.api.onFailure
+import com.jacquessmuts.overengineered.api.onSuccess
 import com.jacquessmuts.overengineered.coroutines.DefaultCoroutineScope
 import com.jacquessmuts.overengineered.db.DeckDb
 import com.jacquessmuts.overengineered.model.Deck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.serialization.UnstableDefault
 import timber.log.Timber
 
+@UnstableDefault
 class CardsRepository(
     private val deckApi: DeckApi,
     private val deckDb: DeckDb
@@ -28,13 +33,11 @@ class CardsRepository(
 
     fun updateDeck() {
         launch {
-            val result = deckApi.getDeck()
-
-            if (result is ApiResult.Success) {
-                Timber.i("Success. Inserting ${result.data}")
-                deckDb.insertNewDeck(result.data)
-            } else if (result is ApiResult.Error) {
-                Timber.e(result.exception)
+            deckApi.getDeck().onSuccess {
+                Timber.i("Success. Inserting $it")
+                deckDb.insertNewDeck(it)
+            }.onFailure {
+                Timber.e(it)
             }
         }
     }
@@ -44,13 +47,13 @@ class CardsRepository(
 
         launch {
             latestDeck?.let { oldDeck ->
-                val result = deckApi.drawCard(oldDeck.id)
+                deckApi.drawCard(oldDeck.id)
+                    .onSuccess {
+                        deckDb.insertNewDeck(oldDeck.copy(cards = it.cards.reversed()))
+                    }.onFailure {
+                        Timber.e(it)
+                    }
 
-                if (result is ApiResult.Success) {
-                    deckDb.insertNewDeck(oldDeck.copy(cards = result.data.cards.reversed()))
-                } else if (result is ApiResult.Error) {
-                    Timber.e(result.exception)
-                }
             } ?: TODO("Handle a 'no deck' error")
         }
     }
