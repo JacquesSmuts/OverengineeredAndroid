@@ -12,10 +12,10 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import io.ktor.utils.io.core.ExperimentalIoApi
 import io.ktor.utils.io.jvm.javaio.toByteReadChannel
+import java.io.InputStream
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.UnstableDefault
 import org.junit.jupiter.api.Assertions.assertEquals
-import java.io.InputStream
 
 @UnstableDefault
 @ExperimentalIoApi
@@ -72,7 +72,7 @@ internal class DeckApiTest {
                 addHandler { request ->
                     responseFileName?.let {
                         respond(
-                            content =resource(it).toByteReadChannel(),
+                            content = resource(it).toByteReadChannel(),
                             headers = headersOf("Content-Type", "application/json"),
                             status = HttpStatusCode.OK
                         )
@@ -107,7 +107,7 @@ object ClasspathResources {
      * Loads the content from the given classpath resource
      *
      * @param classLoader the base classloader
-     * @param name        the name of the resource
+     * @param name the name of the resource
      * @return the content as an [InputStream]
      */
     fun resource(classLoader: ClassLoader, name: String): InputStream {

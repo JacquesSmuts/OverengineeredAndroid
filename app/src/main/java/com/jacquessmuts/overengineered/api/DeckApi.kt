@@ -60,7 +60,7 @@ class DeckApi(private val client: HttpClient = buildHttpClient()) {
     }
 }
 
-class TimberHttpLogger(): Logger {
+class TimberHttpLogger() : Logger {
     override fun log(message: String) {
         Timber.d(message)
     }

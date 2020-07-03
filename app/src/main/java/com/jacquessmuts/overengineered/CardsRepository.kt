@@ -1,8 +1,6 @@
 package com.jacquessmuts.overengineered
 
-import com.jacquessmuts.overengineered.api.ApiResult
 import com.jacquessmuts.overengineered.api.DeckApi
-import com.jacquessmuts.overengineered.api.Success
 import com.jacquessmuts.overengineered.api.onFailure
 import com.jacquessmuts.overengineered.api.onSuccess
 import com.jacquessmuts.overengineered.coroutines.DefaultCoroutineScope
@@ -53,7 +51,6 @@ class CardsRepository(
                     }.onFailure {
                         Timber.e(it)
                     }
-
             } ?: TODO("Handle a 'no deck' error")
         }
     }
