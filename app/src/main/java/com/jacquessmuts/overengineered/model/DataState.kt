@@ -14,7 +14,9 @@ import kotlin.reflect.KSuspendFunction0
 /**
  * A DataState is an object which may contain data for a given type. This data comes from an API
  * call, and/or local persistence. It is meant to be used in a coroutine Flow to update a view
- * based on both the data contents as well as the state of those contents
+ * based on both the data contents as well as the state of those contents.
+ *
+ * The possible DataStates include [NoData], [StaleData], [BackupData] and [FreshData].
  */
 sealed class DataState<T> {
 
@@ -29,12 +31,18 @@ sealed class DataState<T> {
     companion object {
 
         /**
-         * Builds up a Flow of DataStates from a given localData and apiCall reference, and also
-         * updates the data after a successful api call.
+         * Builds up a Flow of DataStates from a given localData flow and apiCall reference.
+         * Optionally updates the data after a single successful api call.
          *
-         * @param localData a Flow reference to localdata, that will update once data is inserted
-         * @param apiCall the call made to get the data
-         * @param saveLocalData the call made to update the data locally
+         * Once the data is Fresh™️, any future changes to the data is assumed to also be Fresh™️.
+         *
+         * The assumption here is that saving local data automatically results in the localData flow
+         * also updating. If that does not happen, the flow's last emission will be a result of the
+         * final api Call's status: FreshData, NoData or BackupData
+         *
+         * @param localData a Flow reference to localData, that will update once data is inserted
+         * @param apiCall the call made to get the newest data
+         * @param saveLocalData the optional call made to update the data locally
          */
         fun <T> buildDataState(
             localData: Flow<T?>,
@@ -66,7 +74,7 @@ sealed class DataState<T> {
             var emissionsSkipped = 0
             localData.collect { latestData ->
                 if (latestData == staleData && dataHasChanged && emissionsSkipped <= 1 && apiResult is Success) {
-                    //"skip" the first identical emission and emit the api data we just received, instead
+                    //"skip" the first identical emission and emit the api data we just received instead
                     emissionsSkipped++
                     emit(FreshData(apiResult.data))
                 } else if (emissionsSkipped == 1 && latestData == apiResult.getOrNull()) {
@@ -86,7 +94,6 @@ sealed class DataState<T> {
         }
 
         suspend fun <T> doNothing(input: T) = delay(0)
-
     }
 }
 
