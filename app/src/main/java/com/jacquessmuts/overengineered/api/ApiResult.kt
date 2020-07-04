@@ -8,8 +8,6 @@ import timber.log.Timber
  * class.
  *
  * If you want to get a status without caring about the successful result, use **ApiResult Unit**
- *
- * TODO: make this more Railway Oriented by adding an "onSuccess" and "onFailure" receiver function for chaining results.
  */
 sealed class ApiResult<T> {
 
