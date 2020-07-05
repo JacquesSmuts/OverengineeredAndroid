@@ -4,11 +4,15 @@ import com.jacquessmuts.overengineered.api.ApiResult
 import com.jacquessmuts.overengineered.api.Failure
 import com.jacquessmuts.overengineered.api.Success
 import com.jacquessmuts.overengineered.api.onSuccess
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.selects.select
 import kotlin.reflect.KSuspendFunction0
 
 /**
@@ -16,7 +20,7 @@ import kotlin.reflect.KSuspendFunction0
  * call, and/or local persistence. It is meant to be used in a coroutine Flow to update a view
  * based on both the data contents as well as the state of those contents.
  *
- * The possible DataStates include [NoData], [StaleData], [BackupData] and [FreshData].
+ * The possible DataStates include [NoData], [StaleData], [FallbackData] and [FreshData].
  */
 sealed class DataState<T> {
 
@@ -24,10 +28,11 @@ sealed class DataState<T> {
         get() = when (this) {
             is NoData -> null
             is StaleData -> localData
-            is BackupData -> localData
+            is FallbackData -> localData
             is FreshData -> apiData
         }
 
+    @ExperimentalCoroutinesApi
     companion object {
 
         /**
@@ -38,36 +43,66 @@ sealed class DataState<T> {
          *
          * The assumption here is that saving local data automatically results in the localData flow
          * also updating. If that does not happen, the flow's last emission will be a result of the
-         * final api Call's status: FreshData, NoData or BackupData
+         * final api Call's status: FreshData, NoData or BackupData.
+         *
+         * The expected flow of data coming from this state would generally be one of the following:
+         * - Quick api [Success]: [FreshData]
+         * - Slow api [Success] with local data: [StaleData] -> [FreshData]
+         * - Slow api [Success] without local data: -> [FreshData]
+         * - Quick api [Failure] with local data: [FallbackData]
+         * - Slow api [Failure] with local data: [StaleData] -> [FallbackData]
+         * - any api [Failure] without fallback data: [NoData]
          *
          * @param localData a Flow reference to localData, that will update once data is inserted
          * @param apiCall the call made to get the newest data
          * @param saveLocalData the optional call made to update the data locally
+         * @param timeoutInMillisForStale the time before staleData is emitted.
          */
         fun <T> buildDataState(
+            coroutineScope: CoroutineScope,
             localData: Flow<T?>,
             apiCall: KSuspendFunction0<ApiResult<T>>,
-            saveLocalData: suspend (T)-> Unit = ::doNothing
+            saveLocalData: suspend (T) -> Unit = ::doNothing,
+            timeoutInMillisForStale: Long = 2500
         ): Flow<DataState<T>> = flow {
 
             val staleData = localData.first()
-            if (staleData != null) {
-                // Don't emit an empty list or null value on the initial load.
-                if (staleData is Collection<*>) {
-                    @Suppress("UNCHECKED_CAST")
-                    if (staleData.isNotEmpty()) emit(StaleData(staleData as T))
-                } else {
-                    emit(StaleData(staleData))
+
+            val apiJob = coroutineScope.async {
+                apiCall()
+                    .logErrors()
+                    .onSuccess { apiData ->
+                        if (staleData != apiData) {
+                            saveLocalData(apiData)
+                        }
+                    }
+            }
+            val timeoutJob = coroutineScope.async {
+                delay(timeoutInMillisForStale)
+                @Suppress("ThrowableNotThrown")
+                Failure<T>(DataStateTimeoutException())
+            }
+            val list = listOf(apiJob, timeoutJob)
+            val firstResult = select<ApiResult<T>> {
+                list.forEach { job ->
+                    job.onAwait { result ->
+                        result
+                    }
+                }
+            }
+            if (firstResult is Failure && firstResult.exception is DataStateTimeoutException) {
+                if (staleData != null) {
+                    // Don't emit an empty list or null value on the initial load.
+                    if (staleData is Collection<*>) {
+                        @Suppress("UNCHECKED_CAST")
+                        if (staleData.isNotEmpty()) emit(StaleData(staleData as T))
+                    } else {
+                        emit(StaleData(staleData))
+                    }
                 }
             }
 
-            val apiResult = apiCall()
-                .logErrors()
-                .onSuccess { apiData ->
-                    if (staleData != apiData) {
-                        saveLocalData(apiData)
-                    }
-                }
+            val apiResult = apiJob.await()
 
             val dataHasChanged = (apiResult is Success && apiResult.data != staleData)
 
@@ -86,16 +121,18 @@ sealed class DataState<T> {
                     } else {
                         when (apiResult) {
                             is Success -> FreshData(latestData)
-                            is Failure -> BackupData(latestData)
+                            is Failure -> FallbackData(latestData)
                         }
                     })
                 }
             }
         }
 
-        suspend fun <T> doNothing(input: T) = delay(0)
+        private suspend fun <T> doNothing(input: T) = delay(0)
     }
 }
+
+class DataStateTimeoutException(override val message: String = "Timeout for fresh data reached. Reverting to Stale Data until fresh data arrives."): Exception()
 
 /**
  * This state indicates that local data has been fetched, but that an api call may still be in
@@ -106,7 +143,7 @@ data class StaleData<T>(val localData: T): DataState<T>()
 /**
  * This state indicates that the api call has failed, but local data is available to use if you want.
  */
-data class BackupData<T>(val localData: T): DataState<T>()
+data class FallbackData<T>(val localData: T): DataState<T>()
 
 /**
  * This state indicates that an api call has been finished and
